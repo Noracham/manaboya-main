@@ -1,3 +1,47 @@
+.wrapper {
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+
+.grade {
+  text-align: center;
+  width: 100px;
+  aspect-ratio: 1/1;
+  background: orange;
+}
+.grade::first-letter {
+  font-size: 3rem;
+}
+
+table {
+  font-size: 1.7rem;
+}
+table tbody tr td {
+  font-size: 1.3rem;
+}
+table tbody tr td:nth-child(2) {
+  border-radius: 5px;
+  border: 1px solid #000;
+}
+
+html {
+  font-size: 62.5%;
+}
+
 body {
-  background-color: red;
+  padding-inline: 3%;
+  background-color: #FFE589;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+li {
+  list-style: none;
 }/*# sourceMappingURL=style.css.map */
