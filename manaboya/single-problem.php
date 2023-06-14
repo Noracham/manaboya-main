@@ -21,18 +21,18 @@ while ($query->have_posts()) {
         
         // ACFフィールドグループのデータを取得
         //              ↓プラグインで追加されるメソッドだから存在しないと判断されている？
-        $field_group = get_field('problem'); // 'field_group_name' は実際のフィールドグループの名前に置き換えてください
+        $field_group = get_field('problem'); 
         
         // テキストエリアの表示
-        $textarea_value = $field_group['problem_statement']; // 'textarea_field_name' は実際のテキストエリアフィールドの名前に置き換えてください
+        $textarea_value = $field_group['problem_statement']; 
         echo '<p class="problem">' . $textarea_value . '</p>';
         
         // サブグループの表示
-        $sub_group = $field_group['choices']; // 'sub_group_name' は実際のサブグループの名前に置き換えてください
+        $sub_group = $field_group['choices']; 
         if ($sub_group) {
             // サブグループ内のテキストフィールドを表示
             foreach ($sub_group as $sub_field) {
-                $text_value = $sub_field['choice']; // 'text_field_name' は実際のテキストフィールドの名前に置き換えてください
+                $text_value = $sub_field['choice']; 
                 echo '<div class="problem-choice">' . $text_value . '</div>';
             }
         }
@@ -41,6 +41,9 @@ while ($query->have_posts()) {
         $query->the_post();
         echo '<a class="nextProblem" href="' . get_permalink() . '">' . get_the_title() . '</a>';
         break;
+    }
+    else{
+        
     }
 }
 

@@ -1,20 +1,19 @@
 @use "mixin" as m;
 
 .wrapper {
-    width: 50%;
+    width: 95%;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    justify-content: space-between;
+    justify-content: center;
     margin: 0 auto;
 }
 
 .grade {
     text-align: center;
-    width: 100px;
+    width: 45%;
     aspect-ratio: 1/1;
     background: orange;
-
     &::first-letter {
         font-size: 3rem;
     }

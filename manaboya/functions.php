@@ -2,7 +2,7 @@
 function load_my_styles()
 {
     wp_enqueue_style('style', get_template_directory_uri() . '/assets/css/style.css');
-    wp_enqueue_style('reset', "//unpkg.com/ress/dist/ress.min.css", array("style"));
+    wp_enqueue_style('ress', get_template_directory_uri() . '/assets/css/ress.css', array("style"));
 
     wp_enqueue_script("jquery");
     wp_enqueue_script('script', get_template_directory_uri() . '/assets/js/index.js', array("jquery"));
