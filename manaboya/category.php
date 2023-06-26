@@ -3,50 +3,56 @@
 <div id="container" class="wrapper">
     <main>
         <?php
-        // 現在のカテゴリーページの情報を取得
         $current_category = get_queried_object();
-        $current_category_id = $current_category->term_id;
 
-        // 子カテゴリーを取得
         $child_categories = get_categories(array(
-            'child_of' => $current_category_id,
-            'parent' => $current_category_id,
+            //親カテゴリーを指定する
+            'parent' => $current_category->term_id,
+            //カテゴリーに属する投稿がない場合でも表示する
             'hide_empty' => false,
         ));
-
-        // 子カテゴリーが存在する場合、子カテゴリーのリンクを表示
         if ($child_categories) {
             echo '<ul>';
-            foreach ($child_categories as $child_category) {
-                echo '<li><a href="' . get_category_link($child_category->term_id) . '">' . $child_category->name . '</a></li>';
+
+            foreach ($child_categories as $category) {
+                // 子カテゴリーに孫カテゴリーが存在するかチェック
+                $has_grandchild = get_categories(array(
+                    'child_of' => $category->term_id,
+                    'hide_empty' => false,
+                ));
+
+                // 子カテゴリーの投稿を取得
+                $args = array(
+                    //取得する問題のカテゴリーを指定
+                    'category' => $category->term_id,
+                    //投稿を昇順に並び替える(1問目から投稿を取得するため)
+                    'order' => 'asc',
+                    'orderby' => 'date',
+                    //取得する情報の数を指定
+                    'posts_per_page' => 1,
+
+                    'hide_empty' => false,
+                );
+                $child_posts = get_posts($args);
+
+                // リンクを生成
+                $category_link = get_category_link($category->term_id);
+
+                //孫カテゴリーが存在するとき
+                if ($has_grandchild) {
+                    $inner = '<li><a href="' . esc_url($category_link) . '">' . $category->name . '</a></li>';
+                }
+                //孫カテゴリーは存在しないが、カテゴリーに投稿が存在するとき
+                elseif ($child_posts) {
+                    $first_post_permalink = get_permalink($child_posts[0]->ID);
+                    $inner = '<li><a href="' . esc_url($first_post_permalink) . '">' . $category->name . '</a></li>';
+                } else {
+                    $inner = '';
+                }
+
+                echo $inner;
             }
             echo '</ul>';
-        } else {
-            // 子カテゴリーが存在しない場合
-
-            // カテゴリーに所属する投稿数を取得
-            $category_post_count = get_category($current_category_id)->count;
-
-            if ($category_post_count > 0) {
-                // 投稿が存在する場合は、最新の投稿にリダイレクト
-                $args = array(
-                    'posts_per_page' => 1,
-                    'category' => $current_category_id,
-                    'orderby' => 'date',
-                    'order' => 'ASC',
-                );
-                $query = new WP_Query($args);
-
-                if ($query->have_posts()) {
-                    $query->the_post();
-                    wp_redirect(get_permalink());
-                    exit;
-                }
-            } else {
-                // 投稿が存在しない場合は、カテゴリーページの内容を表示
-                echo '<h2>' . $current_category->name . '</h2>';
-                echo '<p>このカテゴリーには投稿がありません。</p>';
-            }
         }
         ?>
     </main>

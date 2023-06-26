@@ -1,21 +1,71 @@
 @charset "UTF-8";
-.wrapper {
-  width: 95%;
+header {
+  width: 100%;
+  height: 50px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin: 0 auto;
+  align-items: center;
+  padding-inline-start: 10px;
 }
 
-.grade {
-  text-align: center;
-  width: 45%;
-  aspect-ratio: 1/1;
-  background: orange;
-}
-.grade::first-letter {
+.logo {
+  position: relative;
   font-size: 3rem;
+  font-weight: 500;
+  font-family: "Potta One", cursive;
+  color: #000;
+}
+.logo span {
+  color: orange;
+}
+.logo a {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.wrapper {
+  width: 100%;
+  gap: 10px;
+  margin-inline: auto;
+  margin-block-start: 10%;
+}
+
+.grade-select {
+  width: 100vw;
+  height: auto;
+}
+
+.grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 40% 40%;
+  grid-gap: 10px;
+  justify-content: center;
+}
+
+.grid-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: #FFAF14;
+  color: #fff;
+  border-radius: 10px;
+  font-family: "M PLUS 1", sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+.grid-box p {
+  width: auto;
+  height: auto;
+  aspect-ratio: 1/1;
+  font-size: 6.5rem;
 }
 
 table {
@@ -31,23 +81,21 @@ table tbody tr td:nth-child(2) {
 
 html {
   font-size: 62.5%;
+  font-family: "M PLUS 1", sans-serif;
 }
 
 body {
   max-width: 100vw;
-  overflow-x: hidden;
-  background-color: #FFE589;
-  height: 100vh;
-  max-height: 100vh;
-  overflow-y: scroll;
+  overflow: hidden;
+  min-height: -webkit-fill-available;
+  background-color: skyblue;
 }
 
 .main-visual {
-  background: skyblue;
+  background: #FFE589;
   margin: 0 auto;
   width: 100vw;
-  height: auto;
-  max-height: 100vh;
+  height: 100%;
   overflow-y: scroll;
   /*スクロールバー非表示（IE・Edge）*/
   -ms-overflow-style: none;
@@ -72,13 +120,132 @@ li {
   list-style: none;
 }
 
-#container {
-  height: 1000vh;
-}
-
 footer {
   position: fixed;
-  height: 100px;
+  height: 70px;
+  width: 100vw;
+  bottom: 10px;
+  padding-inline: 3%;
+  z-index: 999;
+}
+@media screen and (min-width: 600px) {
+  footer {
+    max-width: 400px;
+  }
+}
+footer ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+footer ul li {
+  position: relative;
+  width: 32%;
+  height: 100%;
+  background: #fff;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding-block: 3%;
+}
+footer ul li a {
+  position: absolute;
   width: 100%;
-  top: calc(100vh - 200px);
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+footer ul li img {
+  width: 35%;
+}
+
+.all-link {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+rt {
+  font-size: 0.5em;
+}
+
+#chatgpt_pop {
+  background: #fff;
+  color: #000;
+  transition: 0.5s;
+}
+
+#pop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.1960784314);
+  display: none;
+}
+
+#popup {
+  position: absolute;
+  background: rgb(255, 255, 255);
+  width: 90%;
+  height: 60vh;
+  min-height: 60vh;
+  border-radius: 10px;
+  transition: all 0.5s;
+  bottom: -25%;
+  right: -30%;
+  transform: translate(0, 0) scale(0);
+  overflow-y: scroll;
+}
+
+.pop-active #pop {
+  background: none; /* 背景色をオフにする */
+}
+
+.pop-active #popup {
+  display: block;
+  bottom: 50%;
+  right: 50%;
+  transform: translate(50%, 50%) scale(1);
+}
+
+.message {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 100px;
+  border-radius: 10px 10px 15px 10px;
+  background: #fff;
+  margin-inline: auto;
+  margin-block-start: 5%;
+}
+.message::after {
+  content: "";
+  position: absolute;
+  width: 5%;
+  aspect-ratio: 1/1;
+  background: #fff;
+  bottom: 0;
+  right: 5%;
+}
+.message-txt {
+  width: 80%;
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.grade {
+  position: relative;
+  text-align: center;
 }/*# sourceMappingURL=style.css.map */
