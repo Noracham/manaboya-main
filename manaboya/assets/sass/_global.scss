@@ -1,5 +1,6 @@
 @use "mixin" as m;
 html{
+    height: 100svh;
     font-size: 62.5%;
   font-family: "M PLUS 1", sans-serif;
 }
@@ -14,23 +15,31 @@ body{
     // max-height: 100dvh;
     // overflow-y: auto;
 }
+.main{
+    background: #FFE589;
+    margin: 0 auto;
+    width: 100vw;
+    height: 100svh;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    align-content: space-between;
+    @include m.mq(tab){
+        max-width: 400px;
+    }
+}
 .main-visual{
     background: #FFE589;
     margin: 0 auto;
     width: 100vw;
-    height: 100%;
-    // min-height: 100dvh;
-    overflow-y: scroll;
-    /*スクロールバー非表示（IE・Edge）*/
-  -ms-overflow-style: none;
-  /*スクロールバー非表示（Firefox）*/
-  scrollbar-width: none;
-  &::-webkit-scrollbar{
-    display: none;
-  }
-    @include m.mq(tab){
-        max-width: 400px;
-    }
+    height: 100svh;
+    // padding-block-end: 110px;
+    /* display: flex; */
+    display: grid;
+    align-items: center;
+    grid-template-rows: 7% 10% calc(77% - 80px) 80px;
+    /* justify-content: space-around; */
+
 }
 a{
     text-decoration: none;
@@ -47,8 +56,12 @@ footer{
     position:fixed;
     height: 70px;
     width: 100vw;
-    bottom:10px;
-    padding-inline:3%;
+    max-width:380px;
+    margin-inline:auto;
+    left:50%;
+    bottom:5px;
+    transform: translateX(-50%);
+    padding-inline:5px;
     z-index: 999;
     @include m.mq(tab){
         max-width:400px;
@@ -182,13 +195,14 @@ rt{
     position: relative;
     display: flex;
     justify-content: center;
-    align-items:center;
+    align-items: center;
     width: 80%;
-    height: 100px;
+    min-height: 70px;
+    height: 100%;
     border-radius: 10px 10px 15px 10px;
     background: #fff;
     margin-inline: auto;
-    margin-block-start:5%;
+    // margin-block-start: 5%;
     &::after{
         content:"";
         position: absolute;

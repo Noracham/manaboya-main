@@ -1,7 +1,8 @@
 @charset "UTF-8";
 header {
   width: 100%;
-  height: 50px;
+  height: 7%;
+  min-width: 50px;
   display: flex;
   align-items: center;
   padding-inline-start: 10px;
@@ -29,7 +30,7 @@ header {
   width: 100%;
   gap: 10px;
   margin-inline: auto;
-  margin-block-start: 10%;
+  position: relative;
 }
 
 .grade-select {
@@ -38,20 +39,38 @@ header {
 }
 
 .grid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100%;
-  display: grid;
-  grid-template-columns: 40% 40%;
-  grid-gap: 10px;
+  height: 48vh;
+  max-width: 400px;
+  /* max-height: 400px; */
+  margin-inline: auto;
+  flex-wrap: wrap;
+  display: flex;
+  gap: 10px;
   justify-content: center;
+  /* overflow: hidden;*/
+}
+@media screen and (max-height: 674px) {
+  .grid {
+    max-width: 242px;
+  }
 }
 
 .grid-box {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  position: relative;
-  width: 100%;
+  /* position: relative; */
+  width: auto;
+  /* width: 37%; */
+  height: 32%;
+  /* max-width: 113px; */
   aspect-ratio: 1/1;
   background: #FFAF14;
   color: #fff;
@@ -59,6 +78,7 @@ header {
   font-family: "M PLUS 1", sans-serif;
   font-size: 2.5rem;
   font-weight: bold;
+  overflow: hidden;
   text-align: center;
 }
 .grid-box p {
@@ -80,6 +100,7 @@ table tbody tr td:nth-child(2) {
 }
 
 html {
+  height: 100svh;
   font-size: 62.5%;
   font-family: "M PLUS 1", sans-serif;
 }
@@ -91,24 +112,32 @@ body {
   background-color: skyblue;
 }
 
+.main {
+  background: #FFE589;
+  margin: 0 auto;
+  width: 100vw;
+  height: 100svh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  align-content: space-between;
+}
+@media screen and (min-width: 600px) {
+  .main {
+    max-width: 400px;
+  }
+}
+
 .main-visual {
   background: #FFE589;
   margin: 0 auto;
   width: 100vw;
-  height: 100%;
-  overflow-y: scroll;
-  /*スクロールバー非表示（IE・Edge）*/
-  -ms-overflow-style: none;
-  /*スクロールバー非表示（Firefox）*/
-  scrollbar-width: none;
-}
-.main-visual::-webkit-scrollbar {
-  display: none;
-}
-@media screen and (min-width: 600px) {
-  .main-visual {
-    max-width: 400px;
-  }
+  height: 100svh;
+  /* display: flex; */
+  display: grid;
+  align-items: center;
+  grid-template-rows: 7% 10% calc(77% - 80px) 80px;
+  /* justify-content: space-around; */
 }
 
 a {
@@ -124,8 +153,12 @@ footer {
   position: fixed;
   height: 70px;
   width: 100vw;
-  bottom: 10px;
-  padding-inline: 3%;
+  max-width: 380px;
+  margin-inline: auto;
+  left: 50%;
+  bottom: 5px;
+  transform: translateX(-50%);
+  padding-inline: 5px;
   z-index: 999;
 }
 @media screen and (min-width: 600px) {
@@ -223,11 +256,11 @@ rt {
   justify-content: center;
   align-items: center;
   width: 80%;
-  height: 100px;
+  min-height: 70px;
+  height: 100%;
   border-radius: 10px 10px 15px 10px;
   background: #fff;
   margin-inline: auto;
-  margin-block-start: 5%;
 }
 .message::after {
   content: "";

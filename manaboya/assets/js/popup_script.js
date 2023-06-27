@@ -36,9 +36,9 @@ jQuery(document).ready(function ($) {
    
       
       //body res
-      $(document).ready(function(){
-        $("body").css('height',$(window).height());
-        $(".main-visual").css('height',$(window).height());
-        console.log($(window).height());
-      })
+      // $(document).ready(function(){
+      //   $("body").css('height',$(window).height());
+      //   $(".main-visual").css('height',$(window).height());
+      //   console.log($(window).height());
+      // })
 });

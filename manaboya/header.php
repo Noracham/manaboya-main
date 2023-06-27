@@ -13,7 +13,8 @@
 </head>
 
 <body>
-    <div class="main-visual">
+
+    <div <?php echo is_front_page() ? 'class="main-visual main"' : 'class="main"'; ?>>
         <header>
             <div class="logo">まな<span>坊</span>や<a href="<?php home_url() ?>"></a></div>
         </header>
