@@ -76,13 +76,6 @@ echo "</div>";
 ?>
 
 <script>
-    function setCookie(name, value, days) {
-    const expirationDate = new Date();
-    expirationDate.setTime(expirationDate.getTime() + (days * 24 * 60 * 60 * 1000));
-    const expires = "expires=" + expirationDate.toUTCString();
-    document.cookie = name + "=" + value + "; " + expires + "; path=/";
-    }
-
     // Cookieの値を取得する関数
     function getCookie(name) {
         const cookieName = name + "=";
@@ -190,9 +183,6 @@ echo "</div>";
         // Cookieに時間を保存
         document.cookie = "startTime=" + startTime.getTime() + "; path=/";
     }
-
-    setCookie("category", <?php echo $current_category; ?>, "7");
-    
 </script>
 
 <!-- <script src="<?php echo get_theme_file_uri("assets/js/problemCount.js") ?>"></script> -->
