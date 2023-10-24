@@ -1,5 +1,3 @@
-<h2>問題を選んでね</h2>
-
 <?php
 $current_category = get_queried_object(); // 現在のカテゴリーを取得
 

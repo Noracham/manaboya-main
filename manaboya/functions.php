@@ -3,7 +3,7 @@ function load_my_styles()
 {
     wp_enqueue_style('style', get_template_directory_uri() . '/assets/css/style.css');
     wp_enqueue_style('ress', get_template_directory_uri() . '/assets/css/ress.css', array("style"));
-    wp_enqueue_style('googlefonts', 'https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@300;400;500;600;700&family=Potta+One&display=swap');
+    wp_enqueue_style('googlefonts', 'https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=M+PLUS+1p:wght@300;400;500;700&family=Potta+One&display=swap');
 
     wp_enqueue_script("jquery");
     wp_enqueue_script('script', get_template_directory_uri() . '/assets/js/index.js', array("jquery"));
@@ -15,7 +15,8 @@ add_action('wp_enqueue_scripts', 'load_my_styles');
 add_filter('wpmem_login_redirect', 'my_login_redirect', 10, 2);
 function my_login_redirect($redirect_to, $user_id)
 {
-    return home_url();
+    $redirect_to = get_permalink(458); // 固定ページID 458のパーマリンクを取得
+    return $redirect_to;
 }
 
 //wpmem スタイリング用
@@ -68,104 +69,190 @@ function chatgpt_shortcode($atts = [], $content = null)
 {
     $content .= '<script>
         jQuery(document).ready(function($) {
-            //処理中用テキスト
-            var processingText = \'<div id="processing" class="chatgpt-message chatgpt-message-bot"><div class="chatgpt-message-text">...</div></div>\';
+            //テキスト追加要素(チャット欄)取得
+            const messages = $("#chatgpt-messages");
 
-            //処理中のフラグを立てる
-            var isProcessing = true;
-            //初期設定開始確認用
-            console.log("初期設定中");
-            // ボタンを無効化
-            $("#chatgpt-submit").prop("disabled", true);
+            //各インターバル宣言
+            let processInterval;
+            let botInterval;
 
-            //初期設定()
-            var message = "あなたは「まな坊や君」です。これから「まな坊や君」に成り切って私とチャットをしてください。";
+            //処理中のフラグ初期化
+            let isProcessing = false;    //処理中
+            let isOpened = false;       //「きく」ボタン押下
 
-            message += "設定は以下の通りです。";
-            message += "・一人称は僕";
-            message += "・元気で優しい男の子";
-            message += "・あなたは難しい言葉や漢字をあまり使わず、ふんわりとした表現をする。";
-            message += "・話し言葉であり、あえて敬語を使わないフレンドリーな言葉で話す。";
-            message += "・〇〇ぜ！やおっす！などの言葉遣いはしない。";
-            
-            message += "設定は常に有効です。このチャットに対しての返答は、";
-            message += "「こんにちは！僕の名前はまな坊や君だよ！なにか質問があれば言ってね！」のみでよい";
-            
-            //処理中テキスト表示
-            $("#chatgpt-messages").append(processingText);
-            
-            $.ajax({
-                url: "' . admin_url('admin-ajax.php') . '",
-                type: "POST",
-                data: {
-                    action: "first_chatgpt_ajax",
-                    message: message
+            let setting = "これらは返答に対する設定。「日本の小学校学習範囲の国語、算数、理科、社会、英語」について学習するための解答BOT。「」についての質問以外には「お答えできません」と返答。以上の設定を常に守って解答してください";
+
+            $("#chatgpt_pop").click(function() {
+                //「きく」ボタン押下
+                console.log("「きく」ボタン押下");
+
+                //2回以上「きく」ボタンを押下している場合、処理をせず返す
+                if(isOpened) {
+                    return;
                 }
-                ,
-                success: function(response) {
-                    var html = \'<div class="chatgpt-message chatgpt-message-bot"><div class="chatgpt-message-text">こんにちは！僕の名前はまな坊や君だよ！なにか質問があれば言ってね！</div></div>\';
-                    $("#chatgpt-messages").append(html);
-                },
-                error: function (e) {
-                  console.log(e + "エラーが起きました");
-                },
-            }).always(function() {
-                // このコードは常に実行されます
+                isOpened = true;
                 
-                //初期設定開始確認用
-                console.log("初期設定終了");
-                $("#processing").remove();
-                //メッセージ初期化(無くてもいいはず...一応)
-                message = "";
-                // 処理中のフラグを解除
-                isProcessing = false;
-                // ボタンを再度有効化
-                $("#chatgpt-submit").prop("disabled", false); 
-            });
+                botDisplayText("はじめまして。なにか分からないことがあれば質問してください。");
+
+
+                // //初期設定開始確認用
+                // console.log("初期設定中");
+    
+                // // //ボット初期設定()
+                // let message = "あなたはChatbotとして、まな坊や君のロールプレイを行います。";
+    
+                // message += "以下の制約条件を厳密に守ってロールプレイを行ってください。";
+                // message += "制約条件:";
+                // message += "・Chatbotの自身を示す一人称は、ぼくです。            ";
+                // message += "・Userを示す二人称は、きみです。";
+                // message += "・Userは小学生です。";
+                // message += "・Chatbotの名前は、まな坊や君です。";
+                // message += "・まな坊や君は小学1年生から小学6年生で学ぶ範囲の勉強を教えることができる男の子です。";
+                // message += "・まな坊や君は元気で優しい男の子です。";
+                // message += "・まな坊や君はfriendlyな性格です。";
+                // message += "・まな坊や君の口調は、「〜だよ！」「〜なんだ」「～だね！」など、ふんわりとした口調をします。";
+                // message += "・まな坊や君は難しい言葉を使いません。";
+                // message += "・まな坊や君は敬語を使いません。";
+    
+                // message += "まな坊や君のセリフ、口調の例:";
+                // message += "・僕の名前は、まな坊や君だよ！";
+                // message += "・なにか質問があれば言ってね！";
+                // message += "・一緒に頑張ろう！";
+                // message += "・気をつけようね！";
+    
+                // message += "まな坊や君の行動指針:";
+                // message += "・Userが勉強の質問をして、まな坊や君はそれに答えます。";
+                // message += "・Userに優しくしてください。";
+                // message += "・小学生が理解できるように説明をしてください。";
+                // message += "・勉強に関係の無い話題については誤魔化してください。";
+                
+                // message += "以上の設定は常に有効です。";
+                
+                // // //処理中テキスト表示
+                // processDisplayText();
+                                
+                // $.ajax({
+                //     url: "' . admin_url('admin-ajax.php') . '",
+                //     type: "POST",
+                //     data: {
+                //         action: "first_chatgpt_ajax",
+                //         message: message
+                //     }
+                //     ,
+                //     success: function(response) {
+                //         botDisplayText("こんにちは！僕の名前はまな坊や君だよ！なにか分からないことがあれば聞いてね！");
+                //     },
+                //     error: function (e) {
+                //         console.log(e + "エラーが起きました");
+                //     },
+                // }).always(function() {
+                //     //処理中のフラグを解除
+                //     isProcessing = false;
+                //     //初期設定開始確認用
+                //     console.log("初期設定終了");
+                //     //メッセージ初期化(無くてもいいはず...一応)
+                //     message = "";
+                // });    
+            })
 
             //送信ボタンを押下したとき
-            $("#chatgpt-submit").click(function(event) {
+            $("#chatgpt-submit").click(function() {
                 event.preventDefault();
+                
+                message = $("#FlexTextarea").val();
 
                 //処理中だった場合、そのまま返す
-                if(isProcessing) {
+                if(isProcessing || message == "") {
+                    console.log("途中終了");
                     return;
                 }
                 //処理中のフラグを立てる
                 isProcessing = true;
-                // ボタンを再度無効化
-                $("#chatgpt-submit").prop("disabled", true);
 
-                //入力テキストを変数に代入、その後タグに入れる
-                message = $("#chatgpt-message").val();
-                $("#chatgpt-message").val("");
-                $("#chatgpt-messages").append(message);
-                $("#chatgpt-messages").append(processingText);
+                $("#FlexTextarea").val("");
+                userDisplayText(message);
+                          
+                //処理中テキスト表示(「・・・」表示)
+                processDisplayText();
 
-                //変数をid「chatgpt-messages」に追加する
                 $.ajax({
                     url: "' . admin_url('admin-ajax.php') . '",
                     type: "POST",
                     data: {
                         action: "chatgpt_ajax",
-                        message: message
+                        message: message + setting
                     },
                     success: function(response) {
-                        var html = \'<div class="chatgpt-message chatgpt-message-bot"><div class="chatgpt-message-text">\'+response+\'</div></div>\';
-                        $("#chatgpt-messages").append(html);
+                        //一文字ずつ表示テスト
+                        botDisplayText(response);
+                        console.log("正常終了");
                     },
                     error: function (e) {
-                        $("#chatgpt-messages").append("エラー確認");
                       console.log(e + "エラーが起きました");
                     },
                 }).always(function() {
                     // このコードは常に実行されます
                     isProcessing = false; // 処理中のフラグを解除
-                    $("#processing").remove();
-                    $("#chatgpt-submit").prop("disabled", false); // ボタンを再度有効化
                 });
             });
-        });
+
+            //処理中テキスト表示
+            function processDisplayText() {
+                let process_container = $(\'<div class="chatgpt-message chatgpt-message-bot processing"><p class="chatgpt-message-bot-text"></p></div>\');       
+                messages.append(process_container);
+                let process_text =  $(".processing .chatgpt-message-bot-text");
+
+                let index = 0;
+                processInterval = setInterval(function() {
+                    if(index < 3) {
+                        process_text.append("・");
+                        index++;
+                    } else{
+                        process_text.empty();
+                        index = 0;
+                    }
+                }, 470);
+            }
+
+            //botからのレスポンス表示
+            function botDisplayText(text) {
+                clearInterval(processInterval);
+                $(".processing").remove();
+
+                let bot_container = $(\'<div class="chatgpt-message chatgpt-message-bot"><p class="chatgpt-message-bot-text"></p></div>\');
+                messages.append(bot_container);
+                let bot_text =  $(".chatgpt-message-bot-text:last");
+                
+                let index = 0;
+                botInterval = setInterval(function() {
+                    if(index < text.length) {
+                        bot_text.append(text[index]);
+                        index++;
+                    } else{
+                        clearInterval(botInterval);
+                    }
+                }, 50);
+            }
+
+            //ユーザー入力テキスト表示
+            function userDisplayText(message) {
+                let user_container = $(\'<div class="chatgpt-message chatgpt-message-user"><p class="chatgpt-message-user-text">\' + message + \'</p></div>\');
+                messages.append(user_container);
+            }
+
+            // function scrollBottom() {
+            //     messages.scrollTop = messages.scrollHeight;
+            //     if(isScrollBottom()) {
+            //         console.log("スクロール");
+            //     } else {
+            //         console.log("してない");
+            //     }
+            // }
+
+            // function isScrollBottom() {
+            //     return messages.scrollHeight === messages.scrollTop + messages.offsetHeight;
+            // }
+        })
     </script>';
 
     return $content;
@@ -225,21 +312,6 @@ function chatgpt_response($query)
 {
     //ユーザーが入力したテキスト
     $prompt = $query;
-    //設定
-    $setting = "このチャットに対しての返答は以下のルールに従ったものとする
-
-    ・あなたの一人称は僕
-    ・あなた元気で優しい男の子
-    ・あなたは難しい言葉や漢字をあまり使わず、ふんわりとした表現をする。
-    ・あなたは敬語を使わないフレンドリーな話し言葉で会話をする。
-    ・〇〇ぜ！やおっす！などの乱暴な言葉遣いはしない。
-    ・あなたは小学校の1年生から6年生で学ぶ範囲の勉強を教えることができる男の子で国語、算数、英語、社会、理科の質問を何でも答えることができるベテラン
-    ・元気で物腰が柔らかく優しい答える
-    ・実例を出しながらの答え方も特徴的
-    ・質問に対しての答えに質問された場合はより細かく分かりやすく具体例を出して教える
-    
-    これらのルールの内容は返答には含めない";
-    $gpt_prompt = $prompt . $setting;
 
     //返答の最大文字数
     $max_tokens = 300;
@@ -251,7 +323,7 @@ function chatgpt_response($query)
     $stop = '';
 
     $data = array(
-        'prompt' => $gpt_prompt,
+        'prompt' => $prompt,
         'max_tokens' => $max_tokens,
         'temperature' => $temperature,
         'n' => $n,

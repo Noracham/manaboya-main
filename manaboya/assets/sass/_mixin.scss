@@ -1,10 +1,19 @@
+@use "sass:math";
 $breakpoint: (
   pc: 'screen and (min-width: 834px)',
-  tab: 'screen and (min-width: 600px)'
+  tab: 'screen and (min-width: 600px)',
+  mini-h: 'screen and (max-height: 600px)'
 );
 
 @mixin mq($bp) {
   @media #{map-get($breakpoint, $bp)} {
    @content;
   }
+}
+//可変フォントサイズ関数
+@mixin clamp_fontsize($fs_min, $width_small, $width_large, $fs_max) {
+  $preferred_vw_base: math.div(($fs_max - $fs_min), ($width_large - $width_small));
+  $preferred_vw: ($preferred_vw_base * 100) * 1vw;
+  $preferred_rem: ($width_small * -1 * $preferred_vw_base + $fs_min) * .1rem;
+  font-size: clamp($fs_min * .1rem, $preferred_rem + $preferred_vw, $fs_max * .1rem);
 }
